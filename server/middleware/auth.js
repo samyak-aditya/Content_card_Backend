@@ -1,28 +1,29 @@
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
+import fs from 'fs';
 
-const jwt_secret = process.env.JWT_SECRET 
+const privateKey = 'def' //fs.readFileSync('private_key.pem', 'utf8');
+const publicKey = 'abc' //fs.readFileSync('public_key.pem', 'utf8');
+
 const auth = async (req, res, next) => {
     try {
-        const token = req.headers.Authorization.split(" ")[1];
-        const isCustomAuth = token.length<500;
-
+        const token = req.headers.authorization.split(" ")[1];
+        const isCustomAuth = token.length < 500;
+        
         let decodedData;
 
-        if(token && isCustomAuth) {
-            decodedData= jwt.verify(token, jwt_secret);
-
-            //get to know user id
-            req.userId = decodeData?.id;
+        if (token && isCustomAuth) {
+            decodedData = jwt.verify(token, privateKey, { algorithms: ['RS256'] });
+            req.userId = decodedData?.id;
         } else {
-            decodedData= jwt.decode(token);
-
+            decodedData = jwt.verify(token, publicKey, { algorithms: ['RS256'] });
             req.userId = decodedData?.sub;
         }
-        next(); 
+        
+        next();
     } catch (error) {
         console.error(error);
+        res.status(401).json({ message: 'Authentication failed' });
     }
-
-}
+};
 
 export default auth;
