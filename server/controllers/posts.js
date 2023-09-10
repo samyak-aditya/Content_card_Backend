@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 
 
 export const getPosts = async (req,res) => {
+  console.log("GET POST")
   try {
     const postMessage= await PostMessage.find();
 
