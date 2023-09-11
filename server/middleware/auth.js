@@ -1,15 +1,18 @@
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
+import path from 'path';
 
-const privateKey = 'def'; //fs.readFileSync('private_key.pem', 'utf8');
-const publicKey = 'abc'; //fs.readFileSync('public_key.pem', 'utf8');
+const privateKey =process.env.PrivateKey;
+const publicKey = process.env.PublicKey;
+
+
 
 const auth = async (req, res, next) => {
     try {
         const authorizationHeader = req.headers.authorization;
 
         if (!authorizationHeader) {
-            return res.status(401).json({ message: 'Authorization header is missing' });
+            return res.status(405).json({ message: 'Authorization header is missing' });
         }
 
         const token = authorizationHeader.split(" ")[1];
@@ -28,7 +31,7 @@ const auth = async (req, res, next) => {
         next();
     } catch (error) {
         console.error(error);
-        res.status(401).json({ message: 'Authentication failed' });
+        res.status(406).json({ message: 'Authentication failed' });
     }
 };
 
