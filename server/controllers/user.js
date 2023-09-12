@@ -1,19 +1,25 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+import fs from 'fs';
+import path from 'path';
 import User from '../models/user.js';
 
 import NodeRSA from 'node-rsa';
 
-const generateKeyPair = () => {
-    const key = new NodeRSA({ b: 2048 }); // You can adjust the key size (bits) as needed
-    const privateKey = key.exportKey('private');
-    const publicKey = key.exportKey('public');
+const __dirname = ''
 
-    return { privateKey, publicKey };
-};
+// Define the relative paths to your .pem files
+const privateKeyPath = 'E:\\memoryproj\\server\\middleware\\private_key.pem'; // Replace with the actual relative path to your private key
+const publicKeyPath = 'E:\\memoryproj\\server\\middleware\\public_key.pem';   // Replace with the actual relative path to your public key
 
-const { privateKey, publicKey } = generateKeyPair();
+// Construct the full paths using __dirname
+const privateKeyFullPath = path.join( privateKeyPath);
+const publicKeyFullPath = path.join(publicKeyPath);
+
+// Read the private key and public key from the files
+const privateKey = fs.readFileSync(privateKeyFullPath, 'utf8');
+const publicKey = fs.readFileSync(publicKeyFullPath, 'utf8');
 export const signin = async (req, res) => {
     const { email, password } = req.body;
 

@@ -31,13 +31,15 @@ const auth = async (req, res, next) => {
 
         let decodedData;
 
-        /*if (token && isCustomAuth) {
+        if (token) {
             decodedData = jwt.verify(token, privateKey, { algorithms: ['RS256'] });
             req.userId = decodedData?.id;
+            console.log(decodedData);
         } else {
             decodedData = jwt.verify(token, publicKey, { algorithms: ['RS256'] });
             req.userId = decodedData?.sub;
-        }*/
+            console.log(decodedData);
+        }
 
         next();
     } catch (error) {
